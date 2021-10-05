@@ -98,7 +98,8 @@ def pngtogif(pathtopngs):
     """Pass in a list of lists of paths\n
     Currently works with only 'input' and 'output' directories and their subdirectories"""
     png_dir = pathtopngs
-
+    start=time.perf_counter()
+    tot=0
     for anims in png_dir: # [ [],[],[] ]
         images = []
         acount=0
@@ -112,22 +113,30 @@ def pngtogif(pathtopngs):
             gifpath=(anims[acount].replace("input","output")) # where the gif will be saved
             gifpath=gifpath.split(os.extsep, 1)[0] # tuple 0 without extension
             gifpath=os.path.join(gifpath+'.gif') # add .gif
-            print(gifpath)
+            #print(gifpath)
             imageio.mimsave(gifpath, images)
+            tot+=1
+            sys.stdout.write('\r'+str(tot)+' done')
+            # time.sleep(0.001)
+            sys.stdout.flush()
+    end=time.perf_counter()-start
+    print("Finished in",end,"s")
 
 def main():
     """very hacky, unsanitary lists being passed into functions, etc"""
     pixellist= [[244,220,136,255],[255,244,143,255]]
     delta=[10,10,90]
 
-    inputpaths=retSubdirpaths() #gif paths from input folder
+    inputpaths=retSubdirpaths(0) #gif paths from input folder
     pngpaths=[[]]
     for inputfilepath in inputpaths:
-        pngpaths.append(processImage(inputfilepath)) #dumps frames in same folder as their gifs (input folder)
+        if(os.path.splitext(inputfilepath)[1]==".png"):
+            continue
+        pngpaths.append(processImage(inputfilepath)) #dumps frames in same folder as their gifs (input folder) WARNING: input folder must not have any file except .GIF or processImage breaks. Delete images if rerun is necessary
     #print(pngpaths) #frame filenames have .gif-n.png appended, easy to remove
 
     #perform frame edits, edited frames dumped to output
-    replacepixels(pixellist,delta) 
+    replacepixels2(pixellist,delta) 
     #png to gif
     pngtogif(pngpaths)
 
