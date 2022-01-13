@@ -7,41 +7,13 @@ import time
 import numpy as np
 from PIL import Image, ImageSequence
 from numpy.__config__ import show
+from numpy.core.fromnumeric import size
 from numpy.lib.type_check import imag
 from subdir import retSubdirpaths
-def verifycolormath(input,delta,mode):
-    """#@brief Pass in a list of RGB pixels tuples [(R,G,B,A),(R,G,B,A),...] and list of delta RGB [R,G,B]\n
-    #@return list with proper RGB/RGBA values<=255"""
-    temp=[input[0]+delta[0],input[1]+delta[1],input[2]+delta[2],input[3]]
-    #print(temp)
-    if input[0]+delta[0] >= 255:
-        temp[0]=255
-    if input[1]+delta[1] >= 255:
-        temp[1]=255
-    if input[2]+delta[2] >= 255:
-        temp[2]=255
-    if mode=='RGBA':
-        temp[3]=input[3]
-        #print("Returning verified: {} {}".format(temp,mode))
-        return temp
-    elif mode=='RGB' or 'P':
-        #print("Returning verified: {} {}".format(temp[:3],mode))
-        return temp[:3]
-
-def get_dur(PIL_Image_object):
-    """ Returns the duration of provided .gif """
-    PIL_Image_object.seek(0)
-    frames = duration = 0
-    while True:
-        try:
-            frames += 1
-            duration += PIL_Image_object.info['duration']
-            PIL_Image_object.seek(PIL_Image_object.tell() + 1)
-        except EOFError:
-            return duration
+from imagelib import *
 
 def replacepixels2(pixelRGBAlist,deltashift):
-    """This is 8x faster\n
+    """This is 5-8x faster\n
     8 images per second completed vs 1 img per second in replacepixels
     """
     makeinputoutput()
@@ -63,7 +35,6 @@ def replacepixels2(pixelRGBAlist,deltashift):
         if not (os.path.splitext(ip)[1]==".png"):
             continue
         img= Image.open(ip)
-        #print(img.format,img.mode)
         if img.mode =='P':
             continue
         img_arr = np.array(img,np.uint8)
@@ -92,7 +63,7 @@ def makeinputoutput():
         os.mkdir(cwd+'/output')
 
 def replacepixels(pixelRGBAlist,deltashift):
-    """Creates input/output folders\n
+    """
     manipulates the images inside input folder, then saves to output folder\n
     very slow, 1 second per image due to O(n^4) complexity\n
     1.5+hr / 5000 img
@@ -149,10 +120,13 @@ def replacepixels(pixelRGBAlist,deltashift):
             sys.stdout.flush()
     print()
 
-def main():
-    pixellist= [[244,220,136,255],[255,244,143,255],[255,242,195,255],[216,192,109,255],[255,238,177,255]]
-    delta=[10,20,100]
+
+def main(): #numpy uses y,x not x,y
+    pixellist= [[255,0,0,255],[0,0,0,255]]
+    delta=[80,80,80]
     replacepixels2(pixellist,delta)
+
+
 # Driver code
 if __name__ == "__main__":
     main()
