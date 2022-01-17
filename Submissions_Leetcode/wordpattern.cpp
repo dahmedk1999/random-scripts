@@ -41,7 +41,8 @@ All the words in s are separated by a single space.
 class Solution {
 public:
     bool wordPattern(string pattern, string s) {
-        map<char,string> m;
+        map<char,int> mapP;
+        map<string,int> mapS;
         vector<string> vectorS;
         int sizeP=pattern.length();
         int sizeS=s.length();
@@ -60,26 +61,18 @@ public:
                 temp="";
             }
         }
-        // check if # of chars == number of words
-        if(sizeP!=vectorS.size())
-            return false;
-        else
-            for(int i=1;i<pattern.length();i++)
-            {
-                if(m.find(pattern[i])!=m.end())
-                    if(m.at(char(pattern[i]))!=vectorS[i])
-                        return 0;
-                m[pattern[i]]=vectorS[i];
-            }
         for(int i=0;i<sizeP;i++)
-            cout<<m.at(pattern[i]);
-    return true;
+        {
+            if(i==sizeP || mapP[pattern[i]]!=mapS[vectorS[i]]) return false;
+            mapP[pattern[i]]=mapS[vectorS[i]]=i+1;
+        }
+    return sizeP==vectorS.size();
     }
 };
 
 int main()
 {
     Solution test;
-    test.wordPattern("abab","cat dog cat dog");
-    test.wordPattern("abba","dog cat cat fish"); //failed
+    cout<<test.wordPattern("abab","cat dog cat dog");
+    cout<<test.wordPattern("abba","dog cat cat dog"); //failed
 }
