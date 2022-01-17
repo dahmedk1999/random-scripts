@@ -1,89 +1,46 @@
 #include <string>
+#include <limits.h>
+#include <iostream>
 using std::string;
-
+using std::cout;
+using std::endl;
 class Solution {
 public:
     int myAtoi(string s) {
-        string temp;
-        short stage=0;
-        bool neg=false;
-        for(int i=0;i<s.length();i++)
-        {
-            switch(s[i])
-            {
-                    //Stage 0: Leading whitespaces, continue and eat them until sign or digit. If whitespace after sign/digit, break.
-                    //Stage 1: Signs, break if another sign or digit
-                    //Stage 2: Invalid char read before digit or after digit, break.
-                    //Stage 9: Invalid stage, negate everything to 0
-                case 32:
-                    if(stage)break; //If not stage 0, not on leading white space
-                    stage=0;
-                    //skip over space
-                    break;
-                case 43: if(stage==1){return 0;}neg=false;stage=1;break; //read first sign, if any. Set stage to 1 afterwards. If another sign is read, invalid input. Set stage to 9
-                case 45: if(stage==1){return 0;}neg=true;stage=1; break; // "" ""
-                case 46: stage=4;break;
-                case 47:
-                case 48:
-                case 49:
-                case 50:
-                case 51:
-                case 52:
-                case 53:
-                case 54:
-                case 55:
-                case 56:
-                case 57:
-                    if(stage==2) //If non digits were read after or before signs/whitespaces.
-                        return 0;
-                    else if(stage==4)break;
-                    temp+=s[i];
-                    stage=3;
-                        break;
-                default:if (stage==4)break;
-                    stage=2;
-                        break;
 
+        short sign=1;
+        int index=0;
+        short size=s.length();
+
+        while(s[index]==' ' && index<size)
+            index++;
+
+        if(index < size && s[index]=='+'){sign=1;index++;}
+        else if(index < size && s[index]=='-'){sign=-1;index++;}
+
+        int res=0;
+        int digit=0;
+        while(index<size && (s[index]-'0'<=9 && s[index]-'0'>=0)){
+            digit=s[index]-'0';
+
+            if((res > INT_MAX/10)||(res == INT_MAX/10 && digit > INT_MAX % 10))
+            {
+                if(sign==1)return INT_MAX;
+                return INT_MIN;
             }
+
+            res= 10 * res + digit;
+            index++;
         }
-        int ret=0;
-        int size=temp.length();
-        for(int i =0;i<size;i++)
-        {
-            if(ret < INT_MAX/10)
-            {
-                ret+=((temp[i]-'0')*(pow(10,size-i-1)));
-            }
-            else if(ret > INT_MAX/10)
-            {
-                if(!neg)
-                {
-                    ret= INT_MAX;
-                    return ret;
-                }
-                if(neg)
-                {
-                    ret= INT_MIN;
-                    return ret;    
-                }                
-            }
-            else if(ret == INT_MAX/10)
-            {
-                if(temp[i]-'0'<8 && !neg)
-                {
-                    ret+=((temp[i]-'0')*(pow(10,size-i-1)));
-                    return ret;
-                }
-                if(temp[i]-'0'<=8 && neg)
-                {
-                    ret+=((temp[i]-'0')*(pow(10,size-i-1)));
-                    return ret;
-                }
-            }
-        }
-        if(neg)
-            ret*=-1;
-       
-        return ret;
+        return res*sign;
     }
 };
+
+int main()
+{
+    Solution test;
+    cout<<test.myAtoi("99394 dasdasd ..")<<endl;
+    cout<<test.myAtoi("ddddd aaa -+")<<endl;
+    cout<<test.myAtoi("-+111")<<endl;
+    cout<<test.myAtoi("-94 d+asdasd ..")<<endl;
+}
