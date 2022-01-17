@@ -74,5 +74,5 @@ int main()
 {
     Solution test;
     cout<<test.wordPattern("abab","cat dog cat dog");
-    cout<<test.wordPattern("abba","dog cat cat dog"); //failed
+    cout<<test.wordPattern("abba","dog cat cat dogg");
 }
