@@ -58,15 +58,22 @@ public:
     void rotate(vector<int>& nums, int k) 
     {
         
-        for(int i=0;i<k;i++)
+        // for(int i=0;i<k;i++)
+        // {
+        //     int size=nums.size();
+        //     int lastNum=nums[size-i-1];
+        //     nums.emplace(nums.begin(),lastNum);
+        // }
+        // for(int i=0;i<k;i++)
+        //     nums.erase(nums.end()-1);
+
+        int size=nums.size();
+        if(size>1)
         {
-            int size=nums.size();
-            int lastNum=nums[size-i-1];
-            nums.emplace(nums.begin(),lastNum);
+            nums.insert(nums.begin(),nums.end()-k%size,nums.end());
+            nums.erase(nums.end()-k%size,nums.end());
         }
-        for(int i=0;i<k;i++)
-            nums.erase(nums.end()-1);
-    
+//another approach is to reverse the array, swap first and last elements, then reverse rest of elements
 
     }
 };
@@ -75,9 +82,9 @@ public:
 int main()
 {
     Solution Test;
-    vector<int> vec = {0,1,2,3,4,5,6,7};
+    vector<int> vec = {1,2,3};
     // vector<int> case38= {2^31 -1 indices }
-    Test.rotate(vec,0);
+    Test.rotate(vec,1);
     for(int i=0;i<vec.size();i++)
         cout<<vec[i];
     cout<<endl;
