@@ -29,6 +29,9 @@ Each element in the array appears twice except for one element which appears onl
 
 Runtime: 25 ms, faster than 54.92% of C++ online submissions for Single Number.
 Memory Usage: 17 MB, less than 50.23% of C++ online submissions for Single Number.
+
+Runtime: 12 ms, faster than 98.32% of C++ online submissions for Single Number.
+Memory Usage: 17 MB, less than 19.26% of C++ online submissions for Single Number.
 */
 class Solution {
 public:
@@ -37,5 +40,11 @@ public:
         for(int i=1;i<nums.size();i++)
             x^=nums[i];
     return x;
+    }
+    int singleNumber2(vector<int>& nums) {
+        int ret=0;
+        for(int a:nums)
+            ret^=a;
+        return ret;
     }
 };

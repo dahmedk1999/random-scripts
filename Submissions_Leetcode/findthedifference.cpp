@@ -42,4 +42,16 @@ public:
         }
         return '\0';
     }
+    //Just add up the ascii values of each character from the string, the leftover difference will be the extraneus  character
+    char findTheDifference2(string s, string t) {
+            int ans=0;
+            for(int i=0;i<s.size();i++)
+            {
+                ans-=s[i];
+                ans+=t[i];
+            }
+            ans+=t[s.size()];  
+            return ans;
+        }
 };
+
