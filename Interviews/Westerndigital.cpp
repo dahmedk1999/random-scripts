@@ -24,7 +24,7 @@ cout<<"Is a palindrome";
 
 
 
-int fibbonacci(int f)
+int fibonacci(int f)
 {
     vector<int> fibList;
     fibList.reserve(100);
@@ -59,5 +59,5 @@ return Instring;
 }
 int main(){
     vowelremove();
-    fibbonacci(9);
+    fibonacci(9);
 }
